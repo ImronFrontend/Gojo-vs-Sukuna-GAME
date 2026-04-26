@@ -21,6 +21,161 @@
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
+            position: relative;
+            transition: all 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* ========== КОСМИЧЕСКИЙ ФОН ДЛЯ ТЕРРИТОРИИ GOJO ========== */
+        body.space-territory {
+            background: radial-gradient(circle at 20% 30%, #0a0a2a, #000010);
+            overflow: hidden;
+        }
+
+        .star {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            animation: starFloat linear infinite;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+            box-shadow: 0 0 3px white;
+        }
+
+        .star-medium {
+            width: 4px;
+            height: 4px;
+            box-shadow: 0 0 6px yellow;
+            background: #ffdd88;
+        }
+
+        .star-large {
+            width: 6px;
+            height: 6px;
+            box-shadow: 0 0 10px cyan;
+            background: #88ddff;
+        }
+
+        @keyframes starFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(var(--move-x, 50px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== ТЁМНО-КРАСНЫЙ ФОН С ЧЕРЕПАМИ ДЛЯ ТЕРРИТОРИИ SUKUNA ========== */
+        body.skull-territory {
+            background: radial-gradient(circle at 50% 50%, #1a0000, #0a0000);
+            overflow: hidden;
+        }
+
+        .skull {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 40px;
+            animation: skullFloat linear infinite;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        @keyframes skullFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(var(--move-x, 30px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Анимация для Мирового разреза */
+        @keyframes worldSlash {
+            0% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+            20% {
+                transform: scaleX(1);
+                opacity: 0.8;
+            }
+            80% {
+                transform: scaleX(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+        }
+
+        .world-slash-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 0, 0, 0.8) 20%,
+                rgba(255, 255, 255, 0.9) 50%,
+                rgba(255, 0, 0, 0.8) 80%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 998;
+            animation: worldSlash 0.6s ease-out forwards;
+        }
+
+        /* Красные края экрана при уроне */
+        .damage-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            animation: redFlash 0.3s ease-out;
+        }
+
+        @keyframes redFlash {
+            0% { box-shadow: inset 0 0 0 0 transparent; background: transparent; }
+            20% { box-shadow: inset 0 0 100px 50px rgba(255, 0, 0, 0.6); background: rgba(180, 0, 0, 0.3); }
+            100% { box-shadow: inset 0 0 0 0 transparent; background: transparent; }
+        }
+
+        .damage-border {
+            animation: redBorderFlash 3s ease-out forwards;
+        }
+
+        @keyframes redBorderFlash {
+            0% { border-color: #ff4444; box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+            100% { border-color: inherit; box-shadow: inherit; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            15% { transform: translateX(-5px); }
+            30% { transform: translateX(5px); }
+            45% { transform: translateX(-4px); }
+            60% { transform: translateX(4px); }
+            75% { transform: translateX(-2px); }
+            90% { transform: translateX(2px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake-card {
+            animation: shake 0.4s ease-in-out !important;
         }
 
         .arena {
@@ -32,6 +187,8 @@
             align-items: stretch;
             gap: 2rem;
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .character-card {
@@ -40,7 +197,7 @@
             border-radius: 2.5rem;
             padding: 1.5rem;
             backdrop-filter: blur(6px);
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             box-shadow: 0 20px 35px -12px black;
             border: 2px solid rgba(255, 210, 90, 0.4);
             display: flex;
@@ -49,25 +206,32 @@
             overflow: hidden;
         }
 
+        .character-card.active-turn {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px 8px rgba(255, 215, 0, 0.6);
+            border-color: #ffdd88;
+        }
+
         .character-left {
             background: linear-gradient(145deg, rgba(10, 30, 55, 0.88), rgba(5, 18, 38, 0.96));
             border-left: 8px solid #3a86ff;
-            animation: blueGlow 4s infinite alternate;
+        }
+
+        .character-left.active-turn {
+            border-left: 8px solid #ffdd88;
+            background: linear-gradient(145deg, rgba(20, 50, 90, 0.95), rgba(10, 30, 55, 0.98));
+            box-shadow: 0 0 35px 5px rgba(58, 134, 255, 0.8);
         }
 
         .character-right {
             background: linear-gradient(145deg, rgba(55, 18, 25, 0.88), rgba(38, 5, 15, 0.96));
             border-right: 8px solid #ff3a4d;
-            animation: redGlow 4s infinite alternate;
         }
 
-        @keyframes blueGlow {
-            0% { box-shadow: 0 0 5px rgba(58, 134, 255, 0.2); border-left-color: #3a86ff; }
-            100% { box-shadow: 0 0 28px rgba(58, 134, 255, 0.6); border-left-color: #8bb9ff; }
-        }
-        @keyframes redGlow {
-            0% { box-shadow: 0 0 5px rgba(255, 58, 77, 0.2); border-right-color: #ff3a4d; }
-            100% { box-shadow: 0 0 28px rgba(255, 58, 77, 0.6); border-right-color: #ff8a9a; }
+        .character-right.active-turn {
+            border-right: 8px solid #ffdd88;
+            background: linear-gradient(145deg, rgba(90, 30, 40, 0.95), rgba(55, 18, 25, 0.98));
+            box-shadow: 0 0 35px 5px rgba(255, 58, 77, 0.8);
         }
 
         .hero-img {
@@ -78,10 +242,18 @@
             border: 3px solid gold;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             background: #2c241a;
+            transition: all 0.2s;
+        }
+
+        .active-turn .hero-img {
+            border: 3px solid #ffdd88;
+            box-shadow: 0 0 20px 5px rgba(255, 221, 136, 0.6);
+            transform: scale(1.02);
         }
 
         .avatar { display: flex; justify-content: center; margin-bottom: 0.5rem; position: relative; }
-        .char-name { text-align: center; font-size: 1.4rem; font-weight: 800; margin: 0.3rem 0; }
+        .char-name { text-align: center; font-size: 1.4rem; font-weight: 800; margin: 0.3rem 0; transition: all 0.2s; }
+        .active-turn .char-name { text-shadow: 0 0 10px currentColor; }
         .left-name { background: linear-gradient(135deg, #a0d0ff, #2a6eff); background-clip: text; -webkit-background-clip: text; color: transparent; }
         .right-name { background: linear-gradient(135deg, #ffa0aa, #ff2a4a); background-clip: text; -webkit-background-clip: text; color: transparent; }
 
@@ -128,8 +300,12 @@
         }
         .ultra-btn { background: #6b21a5; border-color: #e879f9; }
         .red-ultra-btn { background: #9b2c2c; border-color: #ff8866; }
+        .world-slash-btn {
+            background: #8b0000;
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
 
-        /* Кнопка звука */
         .sound-btn {
             position: absolute;
             top: 10px;
@@ -150,7 +326,6 @@
         }
         .sound-btn:hover { background: #ffcc44cc; transform: scale(1.05); }
         
-        /* Модальное окно для звуков */
         .sound-modal {
             display: none;
             position: fixed;
@@ -215,6 +390,8 @@
             border: 2px solid #ffdd99;
             box-shadow: 0 0 20px rgba(255,215,0,0.3);
             transition: all 0.2s;
+            position: relative;
+            z-index: 1;
         }
         .turn-indicator span { font-size: 1.6rem; }
         .turn-indicator.blue-turn {
@@ -249,22 +426,18 @@
             font-family: monospace;
             max-height: 160px;
             overflow-y: auto;
+            position: relative;
+            z-index: 1;
         }
-        footer { margin-top: 0.8rem; font-size: 0.7rem; color: #aaa; text-align: center; }
+        footer { margin-top: 0.8rem; font-size: 0.7rem; color: #aaa; text-align: center; position: relative; z-index: 1; }
+        
         @media (max-width: 800px) {
             .hero-img { width: 100px; height: 100px; }
             button { padding: 4px 8px; font-size: 0.65rem; }
             .char-name { font-size: 1.2rem; }
             .turn-indicator { padding: 8px 16px; font-size: 1rem; }
             .sound-btn { width: 28px; height: 28px; font-size: 0.9rem; }
-        }
-        
-        .cooldown-badge {
-            font-size: 0.6rem;
-            background: #ff4444aa;
-            border-radius: 20px;
-            padding: 2px 6px;
-            margin-left: 5px;
+            .skull { font-size: 25px; }
         }
     </style>
 </head>
@@ -275,38 +448,38 @@
         <span>⚔️</span>
         <span id="turnActionText">СЕЙЧАС АТАКУЕТ:</span>
         <span id="turnPlayerName">Gojo (Синий)</span>
-        <span class="turn-arrow">👇</span>
+        <span class="turn-arrow"></span>
     </div>
 </div>
 
 <div class="arena">
     <!-- GOJO -->
-    <div class="character-card character-left">
+    <div class="character-card character-left" id="gojoCard">
         <div class="sound-btn" onclick="openSoundModal('gojo')">🎵</div>
         <div class="avatar"><img class="hero-img" src="./img/e1dbec4bdb7b8d2a065e24b6cdc1dc01.jpg" alt="Gojo" onerror="this.src='https://placehold.co/400x400/1f3a5f/88ccff?text=GOJO';"></div>
         <div class="char-name left-name">🌀 Gojo (САТОРУ ГОДЖО) 🌀</div>
         <div class="stat-block"><div class="stat-header"><span>💙 ЗДОРОВЬЕ (250)</span><span class="stat-value" id="hpLeftVal">250</span></div><div class="bar-bg"><div class="hp-fill" id="hpLeftBar" style="width:100%"></div></div></div>
         <div class="stat-block"><div class="stat-header"><span>💪 ВЫНОСЛИВОСТЬ</span><span class="stat-value" id="staminaLeftVal">100</span></div><div class="bar-bg stamina-bg"><div class="stamina-fill" id="staminaLeftBar" style="width:100%"></div></div></div>
-        <div class="stat-block"><div class="stat-header"><span>🛡️ ЩИТ</span><span class="shield-text" id="shieldLeftVal">Нет</span></div></div>
+        <div class="stat-block"><div class="stat-header"><span>🛡️ ЩИТ (Бесконечность)</span><span class="shield-text" id="shieldLeftVal">❌ Нет</span></div></div>
         <div class="stat-block"><div class="stat-header"><span>⚡ ШКАЛА ПРОБУЖДЕНИЯ</span><span class="stat-value" id="blueUltraValue">0%</span></div><div class="bar-bg ultra-bg"><div class="ultra-fill" id="blueUltraFill" style="width:0%"></div></div></div>
         
         <div class="action-panel">
-            <button id="blueAttack">🔷 СИНЯЯ АТАКА (7 стам)</button>
-            <button id="redAttackGojo">🔴 КРАСНАЯ АТАКА (10 стам)</button>
-            <button id="infinity">♾️ БЕСКОНЕЧНОСТЬ (щит 10 стам)</button>
-            <button id="healGojo">🌿 ЛЕЧЕНИЕ +5 (стам 8)</button>
+            <button id="blueAttack">🔷 СИНЯЯ АТАКА (10 урона)</button>
+            <button id="redAttackGojo">🔴 КРАСНАЯ АТАКА (15 урона)</button>
+            <button id="infinity">♾️ БЕСКОНЕЧНОСТЬ (щит на 1 удар)</button>
+            <button id="healGojo">🌿 ЛЕЧЕНИЕ +10 HP</button>
         </div>
         
         <div class="ultra-panel">
-            <button id="ultraBlue" disabled>💠 МАКС. СИНИЙ (20 стам)</button>
-            <button id="ultraRedGojo" disabled>❤️ МАКС. КРАСНЫЙ (25 стам)</button>
-            <button id="ultraViolet" disabled>🟣 ФИОЛЕТОВЫЙ (50 стам)</button>
-            <button id="ultraInfinity" disabled>🌀 БЕЗГРАНИЧНАЯ ИНФОРМАЦИЯ (стам 15)</button>
+            <button id="ultraBlue" disabled>💠 МАКС. СИНИЙ (20 урона)</button>
+            <button id="ultraRedGojo" disabled>❤️ МАКС. КРАСНЫЙ (25 урона)</button>
+            <button id="ultraViolet" disabled>🟣 ФИОЛЕТОВЫЙ (50 урона)</button>
+            <button id="territoryGojo" class="ultra-btn" disabled>🌌 РАСШИРЕНИЕ ТЕРРИТОРИИ (30 урона +2 хода)</button>
         </div>
     </div>
 
     <!-- SUKUNA -->
-    <div class="character-card character-right">
+    <div class="character-card character-right" id="sukunaCard">
         <div class="sound-btn" onclick="openSoundModal('sukuna')">🎵</div>
         <div class="avatar"><img class="hero-img" src="./img/333af30d0c7cb6d074a0c86531df3639.jpg" alt="Sukuna" onerror="this.src='https://placehold.co/400x400/5f1f2a/ff8866?text=SUKUNA';"></div>
         <div class="char-name right-name">🔥 Sukuna (РЁМЕН СУКУНА) 🔥</div>
@@ -316,30 +489,33 @@
         <div class="stat-block"><div class="stat-header"><span>🔥 ШКАЛА ПРОБУЖДЕНИЯ</span><span class="stat-value" id="redUltraValue">0%</span></div><div class="bar-bg red-ultra-bg"><div class="red-ultra-fill" id="redUltraFill" style="width:0%"></div></div></div>
         
         <div class="action-panel">
-            <button id="slash">🗡️ РАССЕЧЕНИЕ (10 стам)</button>
-            <button id="fuga">💨 ФУГА (20 стам)</button>
-            <button id="fly">🪽 УДАРЫ В ПОЛЕТЕ (7 стам)</button>
-            <button id="healSukuna">🌿 ЛЕЧЕНИЕ +5 (стам 8)</button>
+            <button id="slash">🗡️ РАССЕЧЕНИЕ (10 урона)</button>
+            <button id="fuga">💨 ФУГА (20 урона)</button>
+            <button id="fly">🪽 УДАРЫ В ПОЛЕТЕ (7 урона)</button>
+            <button id="healSukuna">🌿 ЛЕЧЕНИЕ +5 HP</button>
         </div>
         
         <div class="ultra-panel">
-            <button id="multiSlash" class="red-ultra-btn" disabled>⚔️ МНОЖЕСТВЕННОЕ РАССЕЧЕНИЕ (20 стам)</button>
-            <button id="fuga100" class="red-ultra-btn" disabled>💯 ФУГА 100% (30 стам)</button>
-            <button id="territory" class="red-ultra-btn" disabled>🌌 РАСШИРЕНИЕ ТЕРРИТОРИИ (стам 20)</button>
+            <button id="multiSlash" class="red-ultra-btn" disabled>⚔️ МНОЖЕСТВЕННОЕ РАССЕЧЕНИЕ (20 урона)</button>
+            <button id="fuga100" class="red-ultra-btn" disabled>💯 ФУГА 100% (30 урона)</button>
+            <button id="worldSlash" class="red-ultra-btn world-slash-btn" disabled>⚡ МИРОВОЙ РАЗРЕЗ (70 урона)</button>
+            <button id="territorySukuna" class="red-ultra-btn" disabled>🌌 РАСШИРЕНИЕ ТЕРРИТОРИИ (5x10 урона)</button>
         </div>
     </div>
 </div>
 
 <div class="log-area" id="battleLog">
     ⚔️ БИТВА НАЧАЛАСЬ! Gojo ходит первым.<br>
-    ⏱️ Каждые 10 секунд восстанавливается +2 стамины обоим игрокам!<br>
-    🔄 ПЕРЕЗАРЯДКА ЗАВИСИТ ОТ ЗДОРОВЬЯ: чем меньше HP, тем быстрее перезарядка!<br>
-    💡 Ульты открываются при 100% шкалы пробуждения (+0.5% за атаку, +1%/4сек авто)<br>
-    🎵 Нажмите на кнопку 🎵 у персонажа, чтобы добавить звуки на способности!
+    💙 GOJO: Синяя атака — 10 урона | Красная атака — 15 урона | Лечение +10 HP!<br>
+    🔄 ВСЕ способности имеют перезарядку 20 секунд!<br>
+    🌌 GOJO: Территория — 30 урона + 2 хода + летающие звёзды!<br>
+    ♾️ БЕСКОНЕЧНОСТЬ: Щит на 1 удар!<br>
+    ⚡ SUKUNA: МИРОВОЙ РАЗРЕЗ — 70 урона! (Требует 100% шкалы пробуждения)<br>
+    💀 SUKUNA: Территория — 5x10 урона + летающие черепа!<br>
+    🎵 Нажмите на кнопку 🎵 у персонажа, чтобы добавить звуки!
 </div>
-<footer></footer>
+<footer>✅ GOJO: синяя атака 10 | красная атака 15 | лечение +10 HP | Sukuna: мировой разрез 70 урона!</footer>
 
-<!-- Модальное окно для звуков -->
 <div id="soundModal" class="sound-modal">
     <div class="sound-modal-content">
         <h3 id="modalTitle">Настройка звуков</h3>
@@ -353,9 +529,11 @@
     const MAX_HP = 250;
     const MAX_STAMINA = 100;
     
-    // Базовый урон
-    const BLUE_ATK = 7;
-    const RED_ATK_BLUE = 10;
+    // ========== УРОН GOJO ==========
+    const BLUE_ATK = 10;      // Синяя атака (было 7)
+    const RED_ATK_BLUE = 15;   // Красная атака (было 10)
+    
+    // ========== УРОН SUKUNA ==========
     const SLASH_DMG = 10;
     const FUGA_DMG = 20;
     const FLY_DMG = 7;
@@ -364,8 +542,11 @@
     const ULTRA_VIOLET_DMG = 50;
     const MULTI_SLASH_DMG = 20;
     const FUGA100_DMG = 30;
-    const TERRITORY_HITS = 5;
-    const TERRITORY_DMG_PER_HIT = 10;
+    const WORLD_SLASH_DMG = 70;
+    const TERRITORY_SUKUNA_HITS = 5;
+    const TERRITORY_SUKUNA_DMG = 10;
+    const TERRITORY_GOJO_DMG = 30;
+    const TERRITORY_DURATION = 10000;
     
     let heroes = [
         { name: "Gojo", hp: MAX_HP, stamina: MAX_STAMINA, shield: false },
@@ -374,41 +555,39 @@
     
     let blueUltraCharge = 0;
     let redUltraCharge = 0;
-    let currentTurn = 0; // 0 - Gojo, 1 - Sukuna
+    let currentTurn = 0;
     let isProcessing = false;
+    let territoryTimeout = null;
+    let starInterval = null;
+    let skullInterval = null;
     
-    // === ЗВУКИ ===
-    let soundFiles = {
-        gojo: {},
-        sukuna: {}
-    };
+    // Эффект Мирового разреза
+    function showWorldSlashEffect() {
+        const effect = document.createElement('div');
+        effect.className = 'world-slash-effect';
+        document.body.appendChild(effect);
+        setTimeout(() => {
+            if (effect && effect.parentNode) effect.remove();
+        }, 600);
+    }
     
-    // Список всех способностей для звуков
+    // ЗВУКИ
+    let soundFiles = { gojo: {}, sukuna: {} };
+    
     const gojoAbilities = [
         "blueAttack", "redAttackGojo", "infinity", "healGojo",
-        "ultraBlue", "ultraRedGojo", "ultraViolet", "ultraInfinity"
+        "ultraBlue", "ultraRedGojo", "ultraViolet", "territoryGojo"
     ];
     const sukunaAbilities = [
         "slash", "fuga", "fly", "healSukuna",
-        "multiSlash", "fuga100", "territory"
+        "multiSlash", "fuga100", "worldSlash", "territorySukuna"
     ];
     
     const abilityNames = {
-        blueAttack: "🔷 Синяя атака",
-        redAttackGojo: "🔴 Красная атака", 
-        infinity: "♾️ Бесконечность (щит)",
-        healGojo: "🌿 Лечение",
-        ultraBlue: "💠 Макс. Синий",
-        ultraRedGojo: "❤️ Макс. Красный",
-        ultraViolet: "🟣 Фиолетовый",
-        ultraInfinity: "🌀 Безграничная информация",
-        slash: "🗡️ Рассечение",
-        fuga: "💨 Фуга",
-        fly: "🪽 Удары в полёте",
-        healSukuna: "🌿 Лечение",
-        multiSlash: "⚔️ Множественное рассечение",
-        fuga100: "💯 Фуга 100%",
-        territory: "🌌 Расширение территории"
+        blueAttack: "🔷 Синяя атака", redAttackGojo: "🔴 Красная атака", infinity: "♾️ Бесконечность", healGojo: "🌿 Лечение",
+        ultraBlue: "💠 Макс. Синий", ultraRedGojo: "❤️ Макс. Красный", ultraViolet: "🟣 Фиолетовый", territoryGojo: "🌌 Расширение территории",
+        slash: "🗡️ Рассечение", fuga: "💨 Фуга", fly: "🪽 Удары в полёте", healSukuna: "🌿 Лечение",
+        multiSlash: "⚔️ Множественное рассечение", fuga100: "💯 Фуга 100%", worldSlash: "⚡ Мировой разрез", territorySukuna: "🌌 Расширение территории"
     };
     
     function loadSoundsFromStorage() {
@@ -419,9 +598,7 @@
                 for(let char of ['gojo', 'sukuna']) {
                     if(parsed[char]) {
                         for(let [name, data] of Object.entries(parsed[char])) {
-                            if(data && data.url) {
-                                soundFiles[char][name] = data.url;
-                            }
+                            if(data && data.url) soundFiles[char][name] = data.url;
                         }
                     }
                 }
@@ -438,7 +615,7 @@
         if(url) {
             const audio = new Audio(url);
             audio.volume = 0.7;
-            audio.play().catch(e => console.log("Audio play error:", e));
+            audio.play().catch(e => console.log("Audio error:", e));
         }
     }
     
@@ -447,9 +624,7 @@
     function openSoundModal(char) {
         currentSoundChar = char;
         const modal = document.getElementById('soundModal');
-        const title = document.getElementById('modalTitle');
-        title.innerText = char === 'gojo' ? '🎵 Звуки Gojo' : '🎵 Звуки Sukuna';
-        
+        document.getElementById('modalTitle').innerText = char === 'gojo' ? '🎵 Звуки Gojo' : '🎵 Звуки Sukuna';
         const abilities = char === 'gojo' ? gojoAbilities : sukunaAbilities;
         const listDiv = document.getElementById('soundList');
         listDiv.innerHTML = '';
@@ -474,12 +649,11 @@
                     soundFiles[char][ability] = url;
                     saveSoundsToStorage();
                     document.getElementById(`status_${ability}`).innerText = '✅ Звук установлен';
-                    addLog(`🎵 Звук для ${abilityNames[ability]} установлен!`, false);
+                    addLog(`🎵 Звук для ${abilityNames[ability]} установлен!`);
                 }
             });
             listDiv.appendChild(div);
         });
-        
         modal.style.display = 'flex';
     }
     
@@ -489,7 +663,7 @@
             saveSoundsToStorage();
             const statusDiv = document.getElementById(`status_${ability}`);
             if(statusDiv) statusDiv.innerText = '⭕ Нет звука';
-            addLog(`🎵 Звук для ${abilityNames[ability]} удалён`, false);
+            addLog(`🎵 Звук для ${abilityNames[ability]} удалён`);
         }
     }
     
@@ -503,41 +677,179 @@
                 if(status) status.innerText = '⭕ Нет звука';
             });
         }
-        addLog(`🎵 Все звуки очищены!`, false);
+        addLog(`🎵 Все звуки очищены!`);
     }
     
     function closeSoundModal() {
         document.getElementById('soundModal').style.display = 'none';
     }
     
-    // Система перезарядки (в секундах)
+    // ========== ЛЕТАЮЩИЕ ЗВЁЗДЫ ДЛЯ GOJO ==========
+    function createStar() {
+        const star = document.createElement('div');
+        const size = Math.random();
+        if (size < 0.6) {
+            star.className = 'star star-small';
+        } else if (size < 0.85) {
+            star.className = 'star star-medium';
+        } else {
+            star.className = 'star star-large';
+        }
+        
+        const startX = Math.random() * window.innerWidth;
+        const duration = 5 + Math.random() * 8;
+        const moveX = -50 + Math.random() * 100;
+        
+        star.style.left = startX + 'px';
+        star.style.top = '-10px';
+        star.style.setProperty('--move-x', moveX + 'px');
+        star.style.animationDuration = duration + 's';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        
+        document.body.appendChild(star);
+        
+        setTimeout(() => {
+            if (star && star.parentNode) star.remove();
+        }, duration * 1000);
+    }
+    
+    function startStars() {
+        if (starInterval) clearInterval(starInterval);
+        starInterval = setInterval(() => {
+            if (document.body.classList.contains('space-territory')) {
+                for (let i = 0; i < 5; i++) {
+                    createStar();
+                }
+            }
+        }, 300);
+    }
+    
+    function stopStars() {
+        if (starInterval) {
+            clearInterval(starInterval);
+            starInterval = null;
+        }
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => star.remove());
+    }
+    
+    // ========== ЛЕТАЮЩИЕ ЧЕРЕПА ДЛЯ SUKUNA ==========
+    function createSkull() {
+        const skull = document.createElement('div');
+        skull.className = 'skull';
+        
+        const skulls = ['💀', '☠️', '💀', '☠️', '💀'];
+        skull.textContent = skulls[Math.floor(Math.random() * skulls.length)];
+        
+        const startX = Math.random() * window.innerWidth;
+        const duration = 6 + Math.random() * 10;
+        const moveX = -40 + Math.random() * 80;
+        const size = 25 + Math.random() * 30;
+        
+        skull.style.left = startX + 'px';
+        skull.style.top = '-30px';
+        skull.style.fontSize = size + 'px';
+        skull.style.setProperty('--move-x', moveX + 'px');
+        skull.style.animationDuration = duration + 's';
+        skull.style.animationDelay = Math.random() * 3 + 's';
+        
+        document.body.appendChild(skull);
+        
+        setTimeout(() => {
+            if (skull && skull.parentNode) skull.remove();
+        }, duration * 1000);
+    }
+    
+    function startSkulls() {
+        if (skullInterval) clearInterval(skullInterval);
+        skullInterval = setInterval(() => {
+            if (document.body.classList.contains('skull-territory')) {
+                for (let i = 0; i < 4; i++) {
+                    createSkull();
+                }
+            }
+        }, 400);
+    }
+    
+    function stopSkulls() {
+        if (skullInterval) {
+            clearInterval(skullInterval);
+            skullInterval = null;
+        }
+        const skulls = document.querySelectorAll('.skull');
+        skulls.forEach(skull => skull.remove());
+    }
+    
+    // ФУНКЦИИ ДЛЯ ЭФФЕКТОВ ТЕРРИТОРИИ
+    function activateGojoTerritory() {
+        if (territoryTimeout) clearTimeout(territoryTimeout);
+        
+        document.body.classList.remove('skull-territory');
+        stopSkulls();
+        
+        document.body.classList.add('space-territory');
+        startStars();
+        addLog(`✨✨✨ КОСМИЧЕСКАЯ ТЕРРИТОРИЯ! ЗВЁЗДЫ ЛЕТАЮТ ПО ВСЕМУ ЭКРАНУ! ✨✨✨`);
+        
+        territoryTimeout = setTimeout(() => {
+            document.body.classList.remove('space-territory');
+            stopStars();
+            addLog(`🌌 Космический фон исчез... Звёзды угасают.`);
+            territoryTimeout = null;
+        }, TERRITORY_DURATION);
+    }
+    
+    function activateSukunaTerritory() {
+        if (territoryTimeout) clearTimeout(territoryTimeout);
+        
+        document.body.classList.remove('space-territory');
+        stopStars();
+        
+        document.body.classList.add('skull-territory');
+        startSkulls();
+        addLog(`💀💀💀 ТЁМНО-КРАСНАЯ ТЕРРИТОРИЯ! ЧЕРЕПА ЛЕТАЮТ ПО ВСЕМУ ЭКРАНУ! 💀💀💀`);
+        
+        territoryTimeout = setTimeout(() => {
+            document.body.classList.remove('skull-territory');
+            stopSkulls();
+            addLog(`💀 Тёмно-красный фон исчез... Черепа растворяются.`);
+            territoryTimeout = null;
+        }, TERRITORY_DURATION);
+    }
+    
+    // ФУНКЦИИ ДЛЯ ЭФФЕКТОВ ПРИ УРОНЕ
+    function showDamageEffect(targetCardId) {
+        const card = document.getElementById(targetCardId);
+        if (card) {
+            card.classList.add('shake-card');
+            setTimeout(() => card.classList.remove('shake-card'), 400);
+        }
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'damage-overlay';
+        document.body.appendChild(overlay);
+        document.body.classList.add('damage-border');
+        
+        setTimeout(() => {
+            if (overlay && overlay.parentNode) overlay.remove();
+            document.body.classList.remove('damage-border');
+        }, 3000);
+    }
+    
+    // Перезарядка 20 секунд
     let cooldowns = {
         blueAttack: 0, redAttackGojo: 0, infinity: 0, healGojo: 0,
-        ultraBlue: 0, ultraRedGojo: 0, ultraViolet: 0, ultraInfinity: 0,
+        ultraBlue: 0, ultraRedGojo: 0, ultraViolet: 0, territoryGojo: 0,
         slash: 0, fuga: 0, fly: 0, healSukuna: 0,
-        multiSlash: 0, fuga100: 0, territory: 0
+        multiSlash: 0, fuga100: 0, worldSlash: 0, territorySukuna: 0
     };
     
     let cooldownIntervals = {};
+    const BASE_COOLDOWN = 20;
     
-    function getCooldownTime(abilityBaseCooldown, hpPercent) {
-        let multiplier = 0.3 + (hpPercent * 1.4);
-        multiplier = Math.min(2.0, Math.max(0.3, multiplier));
-        return Math.ceil(abilityBaseCooldown * multiplier);
-    }
-    
-    function getHpPercent(charIndex) {
-        return heroes[charIndex].hp / MAX_HP;
-    }
-    
-    function startCooldown(abilityId, baseCooldown, charIndex) {
+    function startCooldown(abilityId) {
         if (cooldowns[abilityId] > 0) return;
-        
-        const hpPercent = getHpPercent(charIndex);
-        let cooldownTime = getCooldownTime(baseCooldown, hpPercent);
-        cooldownTime = Math.max(1, cooldownTime);
-        
-        cooldowns[abilityId] = cooldownTime;
+        cooldowns[abilityId] = BASE_COOLDOWN;
         updateButtonCooldown(abilityId);
         
         if (cooldownIntervals[abilityId]) clearInterval(cooldownIntervals[abilityId]);
@@ -546,12 +858,11 @@
             if (cooldowns[abilityId] > 0) {
                 cooldowns[abilityId]--;
                 updateButtonCooldown(abilityId);
-                
                 if (cooldowns[abilityId] === 0) {
                     clearInterval(cooldownIntervals[abilityId]);
                     delete cooldownIntervals[abilityId];
                     updateButtonCooldown(abilityId);
-                    addLog(`✅ Способность ${getAbilityName(abilityId)} снова готова!`);
+                    addLog(`✅ ${getAbilityName(abilityId)} снова готова!`);
                 }
             }
         }, 1000);
@@ -560,9 +871,9 @@
     function getAbilityName(abilityId) {
         const names = {
             blueAttack: "Синяя атака", redAttackGojo: "Красная атака", infinity: "Бесконечность", healGojo: "Лечение",
-            ultraBlue: "Макс. Синий", ultraRedGojo: "Макс. Красный", ultraViolet: "Фиолетовый", ultraInfinity: "Безграничная информация",
+            ultraBlue: "Макс. Синий", ultraRedGojo: "Макс. Красный", ultraViolet: "Фиолетовый", territoryGojo: "Расширение территории",
             slash: "Рассечение", fuga: "Фуга", fly: "Удары в полёте", healSukuna: "Лечение",
-            multiSlash: "Множественное рассечение", fuga100: "Фуга 100%", territory: "Расширение территории"
+            multiSlash: "Множественное рассечение", fuga100: "Фуга 100%", worldSlash: "Мировой разрез", territorySukuna: "Расширение территории"
         };
         return names[abilityId] || abilityId;
     }
@@ -570,7 +881,6 @@
     function updateButtonCooldown(abilityId) {
         let btn = document.getElementById(abilityId);
         if (!btn) return;
-        
         let originalText = btn.innerText.split('[')[0].trim();
         if (cooldowns[abilityId] > 0) {
             btn.disabled = true;
@@ -584,11 +894,24 @@
     function getStaminaCost(abilityId) {
         const costs = {
             blueAttack: 5, redAttackGojo: 5, infinity: 10, healGojo: 8,
-            ultraBlue: 10, ultraRedGojo: 10, ultraViolet: 15, ultraInfinity: 15,
+            ultraBlue: 10, ultraRedGojo: 10, ultraViolet: 15, territoryGojo: 20,
             slash: 5, fuga: 10, fly: 5, healSukuna: 8,
-            multiSlash: 15, fuga100: 15, territory: 20
+            multiSlash: 15, fuga100: 15, worldSlash: 25, territorySukuna: 20
         };
         return costs[abilityId] || 5;
+    }
+    
+    function updateCardHighlight() {
+        const gojoCard = document.getElementById('gojoCard');
+        const sukunaCard = document.getElementById('sukunaCard');
+        
+        if (currentTurn === 0) {
+            gojoCard.classList.add('active-turn');
+            sukunaCard.classList.remove('active-turn');
+        } else {
+            sukunaCard.classList.add('active-turn');
+            gojoCard.classList.remove('active-turn');
+        }
     }
     
     function updateUI() {
@@ -596,15 +919,12 @@
         document.getElementById('hpRightVal').innerText = heroes[1].hp;
         document.getElementById('hpLeftBar').style.width = `${(heroes[0].hp/MAX_HP)*100}%`;
         document.getElementById('hpRightBar').style.width = `${(heroes[1].hp/MAX_HP)*100}%`;
-        
         document.getElementById('staminaLeftVal').innerText = heroes[0].stamina;
         document.getElementById('staminaLeftBar').style.width = `${(heroes[0].stamina/MAX_STAMINA)*100}%`;
         document.getElementById('staminaRightVal').innerText = heroes[1].stamina;
         document.getElementById('staminaRightBar').style.width = `${(heroes[1].stamina/MAX_STAMINA)*100}%`;
-        
-        document.getElementById('shieldLeftVal').innerText = heroes[0].shield ? "♾️ АКТИВЕН" : "Нет";
+        document.getElementById('shieldLeftVal').innerText = heroes[0].shield ? "♾️ АКТИВЕН" : "❌ Нет";
         document.getElementById('shieldRightVal').innerText = heroes[1].shield ? "♾️ АКТИВЕН" : "Нет";
-        
         document.getElementById('blueUltraValue').innerText = Math.floor(blueUltraCharge) + "%";
         document.getElementById('blueUltraFill').style.width = `${blueUltraCharge}%`;
         document.getElementById('redUltraValue').innerText = Math.floor(redUltraCharge) + "%";
@@ -614,12 +934,15 @@
         document.getElementById('ultraBlue').disabled = !isBlueReady || cooldowns.ultraBlue > 0;
         document.getElementById('ultraRedGojo').disabled = !isBlueReady || cooldowns.ultraRedGojo > 0;
         document.getElementById('ultraViolet').disabled = !isBlueReady || cooldowns.ultraViolet > 0;
-        document.getElementById('ultraInfinity').disabled = !isBlueReady || cooldowns.ultraInfinity > 0;
+        document.getElementById('territoryGojo').disabled = !isBlueReady || cooldowns.territoryGojo > 0;
         
         const isRedReady = redUltraCharge >= 100;
         document.getElementById('multiSlash').disabled = !isRedReady || cooldowns.multiSlash > 0;
         document.getElementById('fuga100').disabled = !isRedReady || cooldowns.fuga100 > 0;
-        document.getElementById('territory').disabled = !isRedReady || cooldowns.territory > 0;
+        document.getElementById('worldSlash').disabled = !isRedReady || cooldowns.worldSlash > 0;
+        document.getElementById('territorySukuna').disabled = !isRedReady || cooldowns.territorySukuna > 0;
+        
+        updateCardHighlight();
     }
     
     function addLog(msg) {
@@ -645,12 +968,17 @@
     
     function applyDamage(targetIdx, damage, attackerName, abilityName) {
         const target = heroes[targetIdx];
+        
         if (target.shield) {
-            addLog(`🛡️ ${target.name} отражает щитом! Урон от ${abilityName} (${damage}) поглощён.`);
+            addLog(`🛡️♾️ ${target.name} использует БЕСКОНЕЧНОСТЬ! Урон от ${abilityName} (${damage}) полностью поглощён щитом!`);
             target.shield = false;
             updateUI();
             return false;
         }
+        
+        const targetCardId = targetIdx === 0 ? 'gojoCard' : 'sukunaCard';
+        showDamageEffect(targetCardId);
+        
         let newHp = Math.max(0, target.hp - damage);
         let realDmg = target.hp - newHp;
         target.hp = newHp;
@@ -665,20 +993,25 @@
             let old = blueUltraCharge;
             blueUltraCharge = Math.min(100, blueUltraCharge + percent);
             updateUI();
-            if (blueUltraCharge >= 100 && old < 100) addLog(`✨ ПРОБУЖДЕНИЕ GOJO! Шкала 100%!`);
+            if (blueUltraCharge >= 100 && old < 100) addLog(`✨ ПРОБУЖДЕНИЕ GOJO! Шкала 100%! Ульты разблокированы!`);
         } else if (idx === 1 && redUltraCharge < 100) {
             let old = redUltraCharge;
             redUltraCharge = Math.min(100, redUltraCharge + percent);
             updateUI();
-            if (redUltraCharge >= 100 && old < 100) addLog(`🔥 ПРОБУЖДЕНИЕ SUKUNA! Шкала 100%!`);
+            if (redUltraCharge >= 100 && old < 100) addLog(`🔥 ПРОБУЖДЕНИЕ SUKUNA! Шкала 100%! Ульты разблокированы! Включая МИРОВОЙ РАЗРЕЗ!`);
         }
     }
     
-    function switchTurn() {
+    function switchTurn(keepCurrent = false) {
         if (!isAlive(0) || !isAlive(1)) return;
-        currentTurn = currentTurn === 0 ? 1 : 0;
+        if (!keepCurrent) {
+            currentTurn = currentTurn === 0 ? 1 : 0;
+        }
         updateTurnDisplay();
-        addLog(`🔁 Ход переходит к ${heroes[currentTurn].name}.`);
+        updateCardHighlight();
+        if (!keepCurrent) {
+            addLog(`🔁 Ход переходит к ${heroes[currentTurn].name}.`);
+        }
     }
     
     function isAlive(idx) {
@@ -701,8 +1034,8 @@
         }
     }
     
-    async function executeAction(actionFunc, soundChar, soundAbility, abilityId, baseCooldown, charIndex, staminaCost) {
-        if (isProcessing) { addLog(`⏳ Подождите, действие уже выполняется...`); return false; }
+    async function executeAction(actionFunc, soundChar, soundAbility, abilityId, charIndex, staminaCost, extraTurns = 0, isTerritoryAction = false, territoryEffect = null, showEffect = null) {
+        if (isProcessing) { addLog(`⏳ Подождите...`); return false; }
         if (currentTurn !== charIndex) { addLog(`⚠️ Сейчас ход ${heroes[currentTurn].name}!`); return false; }
         if (!isAlive(0) || !isAlive(1)) { addLog(`Битва окончена!`); return false; }
         if (cooldowns[abilityId] > 0) { addLog(`⏰ Способность на перезарядке! Осталось ${cooldowns[abilityId]}с`); return false; }
@@ -711,11 +1044,28 @@
         isProcessing = true;
         try {
             playSound(soundChar, soundAbility);
+            
+            if (showEffect) showEffect();
+            
+            if (isTerritoryAction && territoryEffect) {
+                territoryEffect();
+            }
+            
             let success = await actionFunc();
             if (success) {
                 addUltraCharge(charIndex, 0.5);
-                startCooldown(abilityId, baseCooldown, charIndex);
-                switchTurn();
+                startCooldown(abilityId);
+                
+                if (extraTurns > 0) {
+                    addLog(`✨ ${heroes[charIndex].name} получает ${extraTurns} дополнительных ходов!`);
+                    for (let i = 0; i < extraTurns; i++) {
+                        switchTurn(true);
+                        addLog(`🌀 Дополнительный ход ${i+1} для ${heroes[currentTurn].name}!`);
+                        updateCardHighlight();
+                    }
+                } else {
+                    switchTurn(false);
+                }
             }
             return success;
         } finally {
@@ -727,16 +1077,16 @@
     function doBlueAttack() { return applyDamage(1, BLUE_ATK, heroes[0].name, "СИНЯЯ АТАКА"); }
     function doRedAttack() { return applyDamage(1, RED_ATK_BLUE, heroes[0].name, "КРАСНАЯ АТАКА"); }
     function doInfinity() { 
-        if (heroes[0].shield) { addLog(`Щит уже активен!`); return false; }
+        if (heroes[0].shield) { addLog(`Щит Бесконечности уже активен!`); return false; }
         heroes[0].shield = true; 
-        addLog(`♾️ Gojo активирует БЕСКОНЕЧНОСТЬ!`); 
+        addLog(`♾️ Gojo активирует БЕСКОНЕЧНОСТЬ! Следующая атака Sukuna будет полностью заблокирована!`); 
         updateUI(); 
         return true; 
     }
     function doHealGojo() {
         if (heroes[0].hp >= MAX_HP) { addLog(`Здоровье уже максимум!`); return false; }
-        heroes[0].hp = Math.min(MAX_HP, heroes[0].hp + 5);
-        addLog(`🌿 Gojo лечится +5 HP.`);
+        heroes[0].hp = Math.min(MAX_HP, heroes[0].hp + 10);
+        addLog(`🌿 Gojo лечится +10 HP.`);
         updateUI();
         return true;
     }
@@ -761,13 +1111,13 @@
         updateUI();
         return res;
     }
-    function doUltraInfinity() { 
+    function doTerritoryGojo() { 
         if (blueUltraCharge < 100) { addLog(`Шкала пробуждения не полна!`); return false; }
-        blueUltraCharge = 0;
+        addLog(`🌌🌠 GOJO РАСШИРЯЕТ ТЕРРИТОРИЮ! 30 урона и +2 хода! ЗВЁЗДЫ ЛЕТАЮТ! 🌠🌌`);
+        let res = applyDamage(1, TERRITORY_GOJO_DMG, heroes[0].name, "РАСШИРЕНИЕ ТЕРРИТОРИИ");
+        if (res) blueUltraCharge = 0;
         updateUI();
-        addLog(`🌀 БЕЗГРАНИЧНАЯ ИНФОРМАЦИЯ! Gojo получает дополнительный ход!`);
-        switchTurn(true);
-        return true;
+        return res;
     }
     
     // ========== SUKUNA ДЕЙСТВИЯ ==========
@@ -795,12 +1145,20 @@
         updateUI();
         return res;
     }
-    function doTerritory() { 
+    function doWorldSlash() { 
         if (redUltraCharge < 100) { addLog(`Шкала пробуждения не полна!`); return false; }
-        addLog(`🌌 Sukuna расширяет территорию! 5 ударов по 10 урона!`);
+        addLog(`⚡🌍 SUKUNA ИСПОЛЬЗУЕТ МИРОВОЙ РАЗРЕЗ! 70 УРОНА! 🌍⚡`);
+        let res = applyDamage(0, WORLD_SLASH_DMG, heroes[1].name, "МИРОВОЙ РАЗРЕЗ");
+        if (res) redUltraCharge = 0;
+        updateUI();
+        return res;
+    }
+    function doTerritorySukuna() { 
+        if (redUltraCharge < 100) { addLog(`Шкала пробуждения не полна!`); return false; }
+        addLog(`💀🌑 SUKUNA РАСШИРЯЕТ ТЕРРИТОРИЮ! 5 ударов по 10 урона! ЧЕРЕПА ЛЕТАЮТ! 🌑💀`);
         let anyDamage = false;
-        for (let i = 0; i < TERRITORY_HITS; i++) {
-            let res = applyDamage(0, TERRITORY_DMG_PER_HIT, heroes[1].name, `УДАР ТЕРРИТОРИИ #${i+1}`);
+        for (let i = 0; i < TERRITORY_SUKUNA_HITS; i++) {
+            let res = applyDamage(0, TERRITORY_SUKUNA_DMG, heroes[1].name, `УДАР ТЕРРИТОРИИ #${i+1}`);
             if (res) anyDamage = true;
             if (heroes[0].hp <= 0) break;
         }
@@ -810,7 +1168,7 @@
     }
     
     // КАЖДЫЕ 10 СЕКУНД +2 СТАМИНЫ
-    let stamina10secInterval = setInterval(() => {
+    setInterval(() => {
         let anyRegen = false;
         for (let i = 0; i < heroes.length; i++) {
             if (heroes[i].hp > 0 && heroes[i].stamina < MAX_STAMINA) {
@@ -825,7 +1183,7 @@
     }, 10000);
     
     // АВТО-РЕГЕН ШКАЛЫ ПРОБУЖДЕНИЯ
-    let ultraRegenInterval = setInterval(() => {
+    setInterval(() => {
         if (heroes[0].hp > 0 && blueUltraCharge < 100) {
             blueUltraCharge = Math.min(100, blueUltraCharge + 1);
             updateUI();
@@ -836,24 +1194,25 @@
         }
     }, 4000);
     
-    // ПРИВЯЗКА КНОПОК С ЗВУКАМИ
+    // ПРИВЯЗКА КНОПОК
     function bindButtons() {
         const actions = [
-            { btn: 'blueAttack', func: doBlueAttack, soundChar: 'gojo', soundAbility: 'blueAttack', cooldown: 3, charIdx: 0, stamina: 5, abilityId: 'blueAttack' },
-            { btn: 'redAttackGojo', func: doRedAttack, soundChar: 'gojo', soundAbility: 'redAttackGojo', cooldown: 3, charIdx: 0, stamina: 5, abilityId: 'redAttackGojo' },
-            { btn: 'infinity', func: doInfinity, soundChar: 'gojo', soundAbility: 'infinity', cooldown: 8, charIdx: 0, stamina: 10, abilityId: 'infinity' },
-            { btn: 'healGojo', func: doHealGojo, soundChar: 'gojo', soundAbility: 'healGojo', cooldown: 6, charIdx: 0, stamina: 8, abilityId: 'healGojo' },
-            { btn: 'ultraBlue', func: doUltraBlue, soundChar: 'gojo', soundAbility: 'ultraBlue', cooldown: 5, charIdx: 0, stamina: 10, abilityId: 'ultraBlue' },
-            { btn: 'ultraRedGojo', func: doUltraRedGojo, soundChar: 'gojo', soundAbility: 'ultraRedGojo', cooldown: 5, charIdx: 0, stamina: 10, abilityId: 'ultraRedGojo' },
-            { btn: 'ultraViolet', func: doUltraViolet, soundChar: 'gojo', soundAbility: 'ultraViolet', cooldown: 8, charIdx: 0, stamina: 15, abilityId: 'ultraViolet' },
-            { btn: 'ultraInfinity', func: doUltraInfinity, soundChar: 'gojo', soundAbility: 'ultraInfinity', cooldown: 10, charIdx: 0, stamina: 15, abilityId: 'ultraInfinity' },
-            { btn: 'slash', func: doSlash, soundChar: 'sukuna', soundAbility: 'slash', cooldown: 3, charIdx: 1, stamina: 5, abilityId: 'slash' },
-            { btn: 'fuga', func: doFuga, soundChar: 'sukuna', soundAbility: 'fuga', cooldown: 4, charIdx: 1, stamina: 10, abilityId: 'fuga' },
-            { btn: 'fly', func: doFly, soundChar: 'sukuna', soundAbility: 'fly', cooldown: 3, charIdx: 1, stamina: 5, abilityId: 'fly' },
-            { btn: 'healSukuna', func: doHealSukuna, soundChar: 'sukuna', soundAbility: 'healSukuna', cooldown: 6, charIdx: 1, stamina: 8, abilityId: 'healSukuna' },
-            { btn: 'multiSlash', func: doMultiSlash, soundChar: 'sukuna', soundAbility: 'multiSlash', cooldown: 5, charIdx: 1, stamina: 15, abilityId: 'multiSlash' },
-            { btn: 'fuga100', func: doFuga100, soundChar: 'sukuna', soundAbility: 'fuga100', cooldown: 7, charIdx: 1, stamina: 15, abilityId: 'fuga100' },
-            { btn: 'territory', func: doTerritory, soundChar: 'sukuna', soundAbility: 'territory', cooldown: 8, charIdx: 1, stamina: 20, abilityId: 'territory' }
+            { btn: 'blueAttack', func: doBlueAttack, soundChar: 'gojo', soundAbility: 'blueAttack', charIdx: 0, stamina: 5, abilityId: 'blueAttack', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'redAttackGojo', func: doRedAttack, soundChar: 'gojo', soundAbility: 'redAttackGojo', charIdx: 0, stamina: 5, abilityId: 'redAttackGojo', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'infinity', func: doInfinity, soundChar: 'gojo', soundAbility: 'infinity', charIdx: 0, stamina: 10, abilityId: 'infinity', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'healGojo', func: doHealGojo, soundChar: 'gojo', soundAbility: 'healGojo', charIdx: 0, stamina: 8, abilityId: 'healGojo', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'ultraBlue', func: doUltraBlue, soundChar: 'gojo', soundAbility: 'ultraBlue', charIdx: 0, stamina: 10, abilityId: 'ultraBlue', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'ultraRedGojo', func: doUltraRedGojo, soundChar: 'gojo', soundAbility: 'ultraRedGojo', charIdx: 0, stamina: 10, abilityId: 'ultraRedGojo', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'ultraViolet', func: doUltraViolet, soundChar: 'gojo', soundAbility: 'ultraViolet', charIdx: 0, stamina: 15, abilityId: 'ultraViolet', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'territoryGojo', func: doTerritoryGojo, soundChar: 'gojo', soundAbility: 'territoryGojo', charIdx: 0, stamina: 20, abilityId: 'territoryGojo', extraTurns: 2, isTerritory: true, territoryEffect: activateGojoTerritory, effect: null },
+            { btn: 'slash', func: doSlash, soundChar: 'sukuna', soundAbility: 'slash', charIdx: 1, stamina: 5, abilityId: 'slash', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'fuga', func: doFuga, soundChar: 'sukuna', soundAbility: 'fuga', charIdx: 1, stamina: 10, abilityId: 'fuga', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'fly', func: doFly, soundChar: 'sukuna', soundAbility: 'fly', charIdx: 1, stamina: 5, abilityId: 'fly', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'healSukuna', func: doHealSukuna, soundChar: 'sukuna', soundAbility: 'healSukuna', charIdx: 1, stamina: 8, abilityId: 'healSukuna', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'multiSlash', func: doMultiSlash, soundChar: 'sukuna', soundAbility: 'multiSlash', charIdx: 1, stamina: 15, abilityId: 'multiSlash', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'fuga100', func: doFuga100, soundChar: 'sukuna', soundAbility: 'fuga100', charIdx: 1, stamina: 15, abilityId: 'fuga100', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: null },
+            { btn: 'worldSlash', func: doWorldSlash, soundChar: 'sukuna', soundAbility: 'worldSlash', charIdx: 1, stamina: 25, abilityId: 'worldSlash', extraTurns: 0, isTerritory: false, territoryEffect: null, effect: showWorldSlashEffect },
+            { btn: 'territorySukuna', func: doTerritorySukuna, soundChar: 'sukuna', soundAbility: 'territorySukuna', charIdx: 1, stamina: 20, abilityId: 'territorySukuna', extraTurns: 0, isTerritory: true, territoryEffect: activateSukunaTerritory, effect: null }
         ];
         
         actions.forEach(action => {
@@ -861,7 +1220,7 @@
             if (btn) {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    executeAction(action.func, action.soundChar, action.soundAbility, action.abilityId, action.cooldown, action.charIdx, action.stamina);
+                    executeAction(action.func, action.soundChar, action.soundAbility, action.abilityId, action.charIdx, action.stamina, action.extraTurns, action.isTerritory, action.territoryEffect, action.effect);
                 });
             }
         });
@@ -871,10 +1230,10 @@
     bindButtons();
     updateUI();
     updateTurnDisplay();
+    updateCardHighlight();
     addLog(`✨ СИСТЕМА АКТИВИРОВАНА!`);
-    addLog(`⏱️ Каждые 10 секунд: +2 стамины`);
-    addLog(`🔄 Перезарядка способностей зависит от здоровья!`);
-    addLog(`🎵 Нажмите на кнопку 🎵 у персонажа, чтобы добавить свои звуки!`);
+    addLog(`💙 GOJO: Синяя атака — 10 урона | Красная атака — 15 урона | Лечение +10 HP!`);
+    addLog(`⚡ SUKUNA: МИРОВОЙ РАЗРЕЗ — 70 УРОНА! (Требует 100% шкалы пробуждения)`);
     addLog(`⚔️ Первым атакует Gojo!`);
 </script>
 </body>
